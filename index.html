@@ -1,212 +1,485 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate XI - Mini Draft Game</title>
-    <!-- Tailwind CSS CDN for instant styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4 font-sans">
-
-    <div class="max-w-3xl w-full bg-slate-900 border border-slate-800 rounded-2xl p-6 text-white shadow-2xl">
-        
-        <!-- Top Dashboard -->
-        <div class="flex justify-between items-center bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6">
-            <div>
-                <div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Squad Rating</div>
-                <div id="overallScore" class="text-3xl font-extrabold text-amber-400">0</div>
-            </div>
-            <div class="text-center">
-                <div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Chemistry</div>
-                <div id="chemScore" class="text-3xl font-extrabold text-emerald-400">0%</div>
-            </div>
-            <div>
-                <button onclick="resetDraft()" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 text-xs px-3 py-2 rounded-lg font-bold transition-all flex items-center gap-1">
-                    🔄 Reset
-                </button>
-            </div>
-        </div>
-
-        <!-- Pitch Grid (11 Formation Slots) -->
-        <div id="draftPitch" class="grid grid-cols-4 sm:grid-cols-4 gap-3 bg-emerald-950/40 p-4 rounded-xl border border-emerald-500/20 min-h-[340px] mb-6">
-            <!-- Rendered dynamically via JavaScript -->
-        </div>
-
-        <!-- Selection Modal -->
-        <div id="selectionModal" class="hidden bg-slate-950 p-4 rounded-xl border border-amber-500/40">
-            <div class="flex justify-between items-center mb-3">
-                <span id="modalPosTitle" class="text-xs font-bold uppercase tracking-wider text-amber-400">Pick Player</span>
-                <span class="text-[10px] text-slate-400">Select 1 Card</span>
-            </div>
-            <div id="cardsChoiceGrid" class="grid grid-cols-3 gap-3"></div>
-        </div>
-
-    </div>
-
-<script>
-// Real Player Database Pool organized by position
-const playerPool = {
-    LW: [
-        { name: "K. Kvaratskhelia", rating: 87, club: "Napoli", nation: "Georgia" },
-        { name: "Vinicius Jr.", rating: 89, club: "Real Madrid", nation: "Brazil" },
-        { name: "L. Diaz", rating: 84, club: "Liverpool", nation: "Colombia" }
-    ],
-    ST: [
-        { name: "E. Haaland", rating: 91, club: "Man City", nation: "Norway" },
-        { name: "K. Mbappé", rating: 91, club: "Real Madrid", nation: "France" },
-        { name: "L. Martinez", rating: 88, club: "Inter", nation: "Argentina" }
-    ],
-    RW: [
-        { name: "M. Salah", rating: 89, club: "Liverpool", nation: "Egypt" },
-        { name: "L. Yamal", rating: 83, club: "Barcelona", nation: "Spain" },
-        { name: "Raphinha", rating: 84, club: "Barcelona", nation: "Brazil" }
-    ],
-    CAM: [
-        { name: "J. Bellingham", rating: 90, club: "Real Madrid", nation: "England" },
-        { name: "K. De Bruyne", rating: 91, club: "Man City", nation: "Belgium" },
-        { name: "F. Wirtz", rating: 88, club: "Leverkusen", nation: "Germany" }
-    ],
-    CM: [
-        { name: "F. Valverde", rating: 88, club: "Real Madrid", nation: "Uruguay" },
-        { name: "Pedri", rating: 86, club: "Barcelona", nation: "Spain" },
-        { name: "N. Barella", rating: 87, club: "Inter", nation: "Italy" }
-    ],
-    CDM: [
-        { name: "Rodri", rating: 91, club: "Man City", nation: "Spain" },
-        { name: "D. Rice", rating: 87, club: "Arsenal", nation: "England" },
-        { name: "A. Tchouameni", rating: 85, club: "Real Madrid", nation: "France" }
-    ],
-    LB: [
-        { name: "T. Hernandez", rating: 87, club: "AC Milan", nation: "France" },
-        { name: "A. Robertson", rating: 85, club: "Liverpool", nation: "Scotland" },
-        { name: "F. Mendy", rating: 83, club: "Real Madrid", nation: "France" }
-    ],
-    CB: [
-        { name: "V. van Dijk", rating: 89, club: "Liverpool", nation: "Netherlands" },
-        { name: "W. Saliba", rating: 87, club: "Arsenal", nation: "France" },
-        { name: "R. Dias", rating: 88, club: "Man City", nation: "Portugal" }
-    ],
-    RB: [
-        { name: "D. Carvajal", rating: 86, club: "Real Madrid", nation: "Spain" },
-        { name: "J. Frimpong", rating: 84, club: "Leverkusen", nation: "Netherlands" },
-        { name: "T. Alexander-Arnold", rating: 86, club: "Liverpool", nation: "England" }
-    ],
-    GK: [
-        { name: "T. Courtois", rating: 90, club: "Real Madrid", nation: "Belgium" },
-        { name: "A. Becker", rating: 89, club: "Liverpool", nation: "Brazil" },
-        { name: "E. Martinez", rating: 87, club: "Aston Villa", nation: "Argentina" }
-    ]
-};
-
-const pitchSlots = ["LW", "ST", "RW", "CAM", "CM", "CDM", "LB", "CB", "CB", "RB", "GK"];
-let squad = new Array(11).fill(null);
-let activeSlotIndex = null;
-
-function renderPitch() {
-    const pitch = document.getElementById('draftPitch');
-    pitch.innerHTML = '';
-
-    pitchSlots.forEach((pos, idx) => {
-        const player = squad[idx];
-        const cardBtn = document.createElement('div');
-        
-        const isLegend = player && player.rating >= 88;
-        const borderStyle = isLegend 
-            ? "border-amber-400 bg-amber-950/30 shadow-amber-500/20 shadow-lg ring-1 ring-amber-400/50" 
-            : "border-slate-800 bg-slate-900/90";
-
-        cardBtn.className = `p-3 border rounded-xl flex flex-col items-center justify-between cursor-pointer transition-all hover:scale-105 h-28 ${borderStyle}`;
-        
-        if (player) {
-            cardBtn.innerHTML = `
-                <span class="text-[9px] font-bold text-slate-400 uppercase">${pos}</span>
-                <span class="text-xl font-black ${isLegend ? 'text-amber-400' : 'text-slate-200'}">${player.rating}</span>
-                <span class="text-xs font-semibold text-white truncate w-full text-center">${player.name}</span>
-                <span class="text-[9px] text-slate-400 truncate w-full text-center">${player.club}</span>
-            `;
-        } else {
-            cardBtn.innerHTML = `
-                <span class="text-[10px] font-bold text-amber-400 uppercase">${pos}</span>
-                <span class="text-2xl font-bold text-slate-600 mt-1">+</span>
-                <span class="text-[10px] text-slate-500">Pick</span>
-            `;
-            cardBtn.onclick = () => openPicker(pos, idx);
-        }
-
-        pitch.appendChild(cardBtn);
-    });
-
-    updateStats();
-}
-
-function openPicker(pos, slotIdx) {
-    activeSlotIndex = slotIdx;
-    const modal = document.getElementById('selectionModal');
-    const grid = document.getElementById('cardsChoiceGrid');
-    document.getElementById('modalPosTitle').innerText = `Pick a ${pos}`;
+    <title>Santusht Kumar Pathak | B.Tech AI & ML Student Portfolio</title>
     
-    grid.innerHTML = '';
-    const choices = playerPool[pos] || playerPool['CM'];
-
-    choices.forEach(player => {
-        const isLegend = player.rating >= 88;
-        const card = document.createElement('div');
-        card.className = `p-3 rounded-xl border ${isLegend ? 'border-amber-400 bg-amber-500/10 shadow-amber-500/10 shadow-md' : 'border-slate-800 bg-slate-900'} cursor-pointer hover:border-emerald-400 hover:scale-105 transition-all text-center`;
-        card.innerHTML = `
-            <div class="text-2xl font-black ${isLegend ? 'text-amber-400' : 'text-slate-200'}">${player.rating}</div>
-            <div class="text-xs font-bold text-white truncate">${player.name}</div>
-            <div class="text-[10px] text-slate-400">${player.club} • ${player.nation}</div>
-        `;
-        card.onclick = () => selectCard(player);
-        grid.appendChild(card);
-    });
-
-    modal.classList.remove('hidden');
-}
-
-function selectCard(player) {
-    if (activeSlotIndex !== null) {
-        squad[activeSlotIndex] = player;
-    }
-    document.getElementById('selectionModal').classList.add('hidden');
-    renderPitch();
-}
-
-function updateStats() {
-    const picked = squad.filter(p => p !== null);
-    if (picked.length === 0) {
-        document.getElementById('overallScore').innerText = '0';
-        document.getElementById('chemScore').innerText = '0%';
-        return;
-    }
-
-    // Calculate Average Rating
-    const avgRating = Math.round(picked.reduce((acc, p) => acc + p.rating, 0) / picked.length);
-    document.getElementById('overallScore').innerText = avgRating;
-
-    // Calculate Chemistry based on matching clubs/nations
-    let chemBonus = 0;
-    for (let i = 0; i < picked.length; i++) {
-        for (let j = i + 1; j < picked.length; j++) {
-            if (picked[i].club === picked[j].club) chemBonus += 10;
-            if (picked[i].nation === picked[j].nation) chemBonus += 6;
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            950: '#060D17',
+                            900: '#0A1628',
+                            800: '#112240',
+                            700: '#1E3A8A',
+                        },
+                        crimson: {
+                            DEFAULT: '#DC2626',
+                            light: '#EF4444',
+                            dark: '#991B1B',
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['Space Grotesk', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
         }
-    }
+    </script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #060D17;
+            color: #F3F4F6;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060D17;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E3A8A;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #DC2626;
+        }
+        .glass-card {
+            background: rgba(17, 34, 64, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card:hover {
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-crimson selection:text-white">
 
-    const totalChem = Math.min(100, Math.round((picked.length / 11) * 35 + chemBonus));
-    document.getElementById('chemScore').innerText = `${totalChem}%`;
-}
+    <!-- NAVIGATION BAR -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-card bg-navy-950/80 border-b border-white/10 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#hero" class="text-xl sm:text-2xl font-bold font-heading tracking-wider text-white">
+                Santusht Pathak<span class="text-crimson">.</span>
+            </a>
+            
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-gray-300">
+                <a href="#about" class="hover:text-crimson-light transition-colors">About</a>
+                <a href="#skills" class="hover:text-crimson-light transition-colors">Skills</a>
+                <a href="#projects" class="hover:text-crimson-light transition-colors">Projects</a>
+                <a href="#education" class="hover:text-crimson-light transition-colors">Education</a>
+                <a href="#contact" class="hover:text-crimson-light transition-colors">Contact</a>
+            </nav>
 
-function resetDraft() {
-    squad = new Array(11).fill(null);
-    document.getElementById('selectionModal').classList.add('hidden');
-    renderPitch();
-}
+            <button id="menu-btn" class="md:hidden text-gray-300 hover:text-white focus:outline-none">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
 
-// Initializing Pitch on Load
-renderPitch();
-</script>
+        <div id="mobile-menu" class="hidden md:hidden bg-navy-900 border-b border-white/10 px-6 py-4 space-y-3">
+            <a href="#about" class="block text-gray-300 hover:text-crimson-light transition-colors">About</a>
+            <a href="#skills" class="block text-gray-300 hover:text-crimson-light transition-colors">Skills</a>
+            <a href="#projects" class="block text-gray-300 hover:text-crimson-light transition-colors">Projects</a>
+            <a href="#education" class="block text-gray-300 hover:text-crimson-light transition-colors">Education</a>
+            <a href="#contact" class="block text-gray-300 hover:text-crimson-light transition-colors">Contact</a>
+        </div>
+    </header>
 
+    <!-- 1. HERO SECTION -->
+    <section id="hero" class="min-h-screen flex items-center pt-28 pb-16 px-6 relative overflow-hidden">
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-navy-700/30 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-80 h-80 bg-crimson/10 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto w-full">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-crimson/10 border border-crimson/30 text-crimson-light text-xs font-semibold uppercase tracking-wider mb-6">
+                <span class="w-2 h-2 rounded-full bg-crimson animate-pulse"></span>
+                Graduation 2029
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-tight mb-6">
+                Santusht Kumar Pathak <br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-crimson-light">B.Tech AI & ML Student</span> <span class="text-transparent bg-clip-text bg-gradient-to-r from-crimson-light to-red-400">|</span> Building & Learning
+            </h1>
+            
+            <p class="text-lg sm:text-xl text-gray-300 max-w-3xl leading-relaxed mb-10">
+                Tech enthusiast and highly curious B.Tech AI & ML student. Currently focused on building strong fundamentals and grabbing internship opportunities.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4 mb-10">
+                <a href="#projects" class="px-8 py-4 rounded-lg bg-crimson hover:bg-crimson-light text-white font-semibold transition-all duration-300 shadow-lg shadow-crimson/25 hover:shadow-crimson/40 flex items-center gap-2">
+                    View Projects
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+                <a href="#contact" class="px-8 py-4 rounded-lg bg-navy-800 hover:bg-navy-700 text-white font-semibold border border-white/10 hover:border-white/20 transition-all duration-300 flex items-center gap-2">
+                    Contact Me
+                </a>
+            </div>
+
+            <div class="pt-6 border-t border-white/10">
+                <span class="block text-xs uppercase tracking-widest text-gray-400 font-semibold mb-4">Find me on online platforms</span>
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="https://github.com/taserfaceskp" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-5 py-3 glass-card rounded-xl text-white font-medium hover:border-crimson/50 hover:bg-navy-800/80 transition-all group">
+                        <i data-lucide="github" class="w-5 h-5 text-crimson-light group-hover:scale-110 transition-transform"></i>
+                        <span>GitHub Profile</span>
+                        <span class="text-xs text-gray-400 bg-navy-950/80 px-2 py-0.5 rounded-md border border-white/5">@taserfaceskp</span>
+                    </a>
+                    
+                    <a href="https://share.google/lzGIpGgtTGUcNI49i" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-5 py-3 glass-card rounded-xl text-white font-medium hover:border-blue-400/50 hover:bg-navy-800/80 transition-all group">
+                        <i data-lucide="linkedin" class="w-5 h-5 text-blue-400 group-hover:scale-110 transition-transform"></i>
+                        <span>LinkedIn Profile</span>
+                        <span class="text-xs text-gray-400 bg-navy-950/80 px-2 py-0.5 rounded-md border border-white/5">Connect</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. ABOUT SECTION -->
+    <section id="about" class="py-20 px-6 border-t border-white/5 bg-navy-950/40">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-8 h-1 bg-crimson rounded-full"></div>
+                <h2 class="text-3xl sm:text-4xl font-bold text-white">About Me</h2>
+            </div>
+
+            <div class="grid md:grid-cols-12 gap-8 items-start">
+                <div class="md:col-span-8 glass-card p-8 rounded-2xl">
+                    <p class="text-gray-300 text-lg leading-relaxed mb-6">
+                        I’m <strong class="text-white font-semibold">Santusht Kumar Pathak</strong>, a 2nd-year B.Tech student specializing in <span class="text-crimson-light font-medium">Artificial Intelligence and Machine Learning</span> at GLA University (graduating 2029).
+                    </p>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-6">
+                        I’m a tech enthusiast driven by curiosity. I enjoy understanding how things work — whether it’s digital logic, programming, or cloud concepts.
+                    </p>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-6">
+                        I have a strong foundation in <span class="text-white font-medium">Digital Logic Design</span> and communication (English), and I’m steadily building my skills in Python, Java, and web technologies. I recently earned the <span class="text-white font-medium">Microsoft Azure Fundamentals (AZ-900)</span> certification.
+                    </p>
+                    <p class="text-gray-300 text-lg leading-relaxed">
+                        I’m actively looking for <strong class="text-white">internship opportunities</strong> where I can learn fast, contribute, and grow. I’m open to roles in AI/ML, cloud, software development, or related tech domains.
+                    </p>
+                </div>
+
+                <div class="md:col-span-4 glass-card p-6 rounded-2xl border-l-4 border-l-crimson space-y-4">
+                    <h3 class="text-xl font-bold text-white">Quick Snapshot</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between border-b border-white/10 pb-2">
+                            <span class="text-gray-400">Status</span>
+                            <span class="text-gray-200 font-medium">2nd Year B.Tech</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/10 pb-2">
+                            <span class="text-gray-400">Specialization</span>
+                            <span class="text-gray-200 font-medium">AI & ML</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/10 pb-2">
+                            <span class="text-gray-400">Cloud Status</span>
+                            <span class="text-blue-400 font-medium">AZ-900 Certified</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Availability</span>
+                            <span class="text-green-400 font-medium">Open to Internships</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SKILLS SECTION -->
+    <section id="skills" class="py-20 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-center gap-3 mb-12">
+                <div class="w-8 h-1 bg-crimson rounded-full"></div>
+                <h2 class="text-3xl sm:text-4xl font-bold text-white">Technical Skills</h2>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-card p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-crimson/10 rounded-xl flex items-center justify-center text-crimson-light mb-6">
+                        <i data-lucide="code" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">Programming</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-crimson"></span> Python</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-crimson"></span> Java (Basic)</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-crimson"></span> C (Basic)</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-crimson"></span> JavaScript & HTML</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-navy-700/50 rounded-xl flex items-center justify-center text-blue-400 mb-6">
+                        <i data-lucide="wrench" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">Tools & Platforms</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> GitHub</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> Google Colab</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> LinkedIn</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 mb-6">
+                        <i data-lucide="cloud" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">Cloud</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> Microsoft Azure Fundamentals (AZ-900)</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-400 mb-6">
+                        <i data-lucide="compass" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">Exploring</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> ML Fundamentals</li>
+                        <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Building Projects</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. PROJECTS SECTION -->
+    <section id="projects" class="py-20 px-6 border-t border-white/5 bg-navy-950/40">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-center gap-3 mb-12">
+                <div class="w-8 h-1 bg-crimson rounded-full"></div>
+                <h2 class="text-3xl sm:text-4xl font-bold text-white">Projects</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Project 1 -->
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group hover:border-crimson/50 transition-all duration-300">
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-crimson-light bg-crimson/10 border border-crimson/20 px-3 py-1 rounded-full">Web Development</span>
+                            <a href="https://github.com/taserfaceskp" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-xs text-gray-400 hover:text-white transition-colors border border-white/10 px-2 py-1 rounded">
+                                <i data-lucide="github" class="w-4 h-4"></i>
+                                <span>Code</span>
+                            </a>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-crimson-light transition-colors">
+                            Personal Portfolio Website
+                        </h3>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                            A modern, dark-themed responsive portfolio built from scratch to showcase my technical skills, coursework, and AI/ML learning journey. Focused on clean UX and performance.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">HTML5</span>
+                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">Tailwind CSS</span>
+                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">JavaScript</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: WORKING INTERACTIVE MATCH SIMULATOR -->
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between border border-blue-500/30">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full">Interactive AI App</span>
+                            <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">Live Working Demo</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">
+                            Interactive Match Odds Engine
+                        </h3>
+                        <p class="text-gray-300 text-xs leading-relaxed mb-4">
+                            Simulate match outcomes live! Adjust team attacking & defensive ratings below to calculate realistic win/draw probabilities in real-time.
+                        </p>
+
+                        <!-- MINI INTERACTIVE APP -->
+                        <div class="bg-navy-950/80 p-4 rounded-xl border border-white/10 space-y-4 text-xs">
+                            <!-- Team Inputs -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-gray-400 mb-1 font-semibold">Home Attack (1-100)</label>
+                                    <input type="range" id="homeAtt" min="40" max="99" value="85" class="w-full accent-crimson cursor-pointer" oninput="runMatchSimulation()">
+                                    <div class="text-right text-crimson-light font-bold" id="homeAttVal">85</div>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-400 mb-1 font-semibold">Away Defense (1-100)</label>
+                                    <input type="range" id="awayDef" min="40" max="99" value="70" class="w-full accent-blue-400 cursor-pointer" oninput="runMatchSimulation()">
+                                    <div class="text-right text-blue-400 font-bold" id="awayDefVal">70</div>
+                                </div>
+                            </div>
+
+                            <!-- Run Button -->
+                            <button onclick="runMatchSimulation()" class="w-full py-2 bg-gradient-to-r from-crimson to-blue-600 hover:opacity-90 text-white font-semibold rounded-lg transition-all text-xs flex items-center justify-center gap-1">
+                                <i data-lucide="play" class="w-3.5 h-3.5"></i> Recalculate Simulation
+                            </button>
+
+                            <!-- Results Progress Bar -->
+                            <div class="space-y-1.5 pt-2 border-t border-white/10">
+                                <div class="flex justify-between text-gray-300 font-semibold text-[11px]">
+                                    <span>Home Win: <strong id="homeProbText" class="text-crimson-light">0%</strong></span>
+                                    <span>Draw: <strong id="drawProbText" class="text-gray-400">0%</strong></span>
+                                    <span>Away Win: <strong id="awayProbText" class="text-blue-400">0%</strong></span>
+                                </div>
+                                <div class="w-full h-3 bg-navy-900 rounded-full overflow-hidden flex">
+                                    <div id="homeBar" class="bg-crimson h-full transition-all duration-500" style="width: 50%"></div>
+                                    <div id="drawBar" class="bg-gray-500 h-full transition-all duration-500" style="width: 25%"></div>
+                                    <div id="awayBar" class="bg-blue-500 h-full transition-all duration-500" style="width: 25%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            <span class="text-xs bg-navy-800 text-gray-300 px-2.5 py-1 rounded-md border border-white/5">JavaScript Algorithmic Model</span>
+                            <span class="text-xs bg-navy-800 text-gray-300 px-2.5 py-1 rounded-md border border-white/5">Real-time UI</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. EDUCATION & CERTIFICATIONS -->
+    <section id="education" class="py-20 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-center gap-3 mb-12">
+                <div class="w-8 h-1 bg-crimson rounded-full"></div>
+                <h2 class="text-3xl sm:text-4xl font-bold text-white">Education & Certifications</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-navy-700/20 rounded-bl-full pointer-events-none"></div>
+                    <div class="w-12 h-12 bg-crimson/10 rounded-xl flex items-center justify-center text-crimson-light mb-6">
+                        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-xs font-semibold text-gray-400 tracking-wider uppercase">Degree</span>
+                    <h3 class="text-2xl font-bold text-white mt-1 mb-2">B.Tech in Artificial Intelligence & Machine Learning</h3>
+                    <p class="text-gray-300 font-medium mb-4">GLA University, Mathura</p>
+                    
+                    <div class="flex flex-wrap gap-4 text-sm pt-4 border-t border-white/10">
+                        <div>
+                            <span class="block text-xs text-gray-500">Expected Graduation</span>
+                            <span class="text-gray-200 font-semibold">2029</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-bl-full pointer-events-none"></div>
+                    <div class="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 mb-6">
+                        <i data-lucide="award" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-xs font-semibold text-gray-400 tracking-wider uppercase">Certification</span>
+                    <h3 class="text-2xl font-bold text-white mt-1 mb-2">Microsoft Azure Fundamentals</h3>
+                    <p class="text-blue-400 font-medium mb-4">AZ-900 Certified</p>
+                    <p class="text-gray-400 text-sm leading-relaxed pt-4 border-t border-white/10">
+                        Demonstrates foundational knowledge of cloud services, security, privacy, workloads, and how those services are provided with Microsoft Azure.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. CONTACT SECTION -->
+    <section id="contact" class="py-20 px-6 border-t border-white/5 bg-navy-950/60 relative">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-crimson/10 border border-crimson/30 text-crimson-light text-xs font-semibold uppercase tracking-wider mb-6">
+                Get In Touch
+            </div>
+            
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-6">Let's Connect & Collaborate</h2>
+            
+            <p class="text-lg text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Open to internships and learning opportunities. Feel free to reach out!
+            </p>
+
+            <a href="mailto:santusht.pathak_cs.aiml25@gla.ac.in" class="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-crimson hover:bg-crimson-light text-white font-semibold transition-all duration-300 shadow-xl shadow-crimson/20 hover:shadow-crimson/40 mb-12">
+                <i data-lucide="mail" class="w-5 h-5"></i>
+                <span class="break-all">santusht.pathak_cs.aiml25@gla.ac.in</span>
+            </a>
+
+            <div class="flex flex-wrap justify-center items-center gap-6">
+                <a href="https://github.com/taserfaceskp" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-6 py-3.5 glass-card rounded-xl text-gray-200 hover:text-white hover:border-crimson/50 transition-all font-medium">
+                    <i data-lucide="github" class="w-5 h-5 text-crimson-light"></i>
+                    <span>GitHub: <strong>taserfaceskp</strong></span>
+                </a>
+                
+                <a href="https://share.google/lzGIpGgtTGUcNI49i" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-6 py-3.5 glass-card rounded-xl text-gray-200 hover:text-white hover:border-blue-400/50 transition-all font-medium">
+                    <i data-lucide="linkedin" class="w-5 h-5 text-blue-400"></i>
+                    <span>LinkedIn Profile</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-8 px-6 border-t border-white/5 text-center text-sm text-gray-500">
+        <p>© <span id="year"></span> Santusht Kumar Pathak. Built with focus and curiosity.</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // WORKING MATCH SIMULATOR ALGORITHM
+        function runMatchSimulation() {
+            const hAtt = parseInt(document.getElementById('homeAtt').value);
+            const aDef = parseInt(document.getElementById('awayDef').value);
+
+            document.getElementById('homeAttVal').innerText = hAtt;
+            document.getElementById('awayDefVal').innerText = aDef;
+
+            // Rating ratio + slight home-advantage baseline
+            const baseRatio = (hAtt / aDef) * 1.15;
+            
+            let homeWin = Math.min(85, Math.max(10, Math.round(baseRatio * 38)));
+            let draw = Math.min(35, Math.max(15, Math.round(28 - Math.abs(hAtt - aDef) * 0.3)));
+            let awayWin = 100 - (homeWin + draw);
+
+            if (awayWin < 5) {
+                awayWin = 5;
+                homeWin = 100 - draw - awayWin;
+            }
+
+            document.getElementById('homeBar').style.width = homeWin + '%';
+            document.getElementById('drawBar').style.width = draw + '%';
+            document.getElementById('awayBar').style.width = awayWin + '%';
+
+            document.getElementById('homeProbText').innerText = homeWin + '%';
+            document.getElementById('drawProbText').innerText = draw + '%';
+            document.getElementById('awayProbText').innerText = awayWin + '%';
+        }
+
+        // Initialize simulation on launch
+        window.onload = runMatchSimulation;
+    </script>
 </body>
 </html>
