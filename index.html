@@ -104,7 +104,7 @@
         </div>
     </header>
 
-    <!-- 1. HERO SECTION -->
+    <!-- HERO SECTION -->
     <section id="hero" class="min-h-screen flex items-center pt-28 pb-16 px-6 relative overflow-hidden">
         <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-navy-700/30 rounded-full blur-3xl -z-10 pointer-events-none"></div>
         <div class="absolute bottom-10 right-10 w-80 h-80 bg-crimson/10 rounded-full blur-3xl -z-10 pointer-events-none"></div>
@@ -153,7 +153,7 @@
         </div>
     </section>
 
-    <!-- 2. ABOUT SECTION -->
+    <!-- ABOUT SECTION -->
     <section id="about" class="py-20 px-6 border-t border-white/5 bg-navy-950/40">
         <div class="max-w-5xl mx-auto">
             <div class="flex items-center gap-3 mb-8">
@@ -202,7 +202,7 @@
         </div>
     </section>
 
-    <!-- 3. SKILLS SECTION -->
+    <!-- SKILLS SECTION -->
     <section id="skills" class="py-20 px-6">
         <div class="max-w-5xl mx-auto">
             <div class="flex items-center gap-3 mb-12">
@@ -260,7 +260,7 @@
         </div>
     </section>
 
-    <!-- 4. PROJECTS SECTION -->
+    <!-- PROJECTS SECTION -->
     <section id="projects" class="py-20 px-6 border-t border-white/5 bg-navy-950/40">
         <div class="max-w-5xl mx-auto">
             <div class="flex items-center gap-3 mb-12">
@@ -304,12 +304,12 @@
                             Ultimate Squad Draft Simulator
                         </h3>
                         <p class="text-gray-300 text-sm leading-relaxed mb-6">
-                            An interactive 11-player squad builder game that dynamically computes real-time rating averages and calculates chemistry synergy based on club and national links.
+                            An interactive 11-player squad builder game configured in a tactical 4-3-3 formation that dynamically computes real-time rating averages and chemistry synergy.
                         </p>
                         <div class="flex flex-wrap gap-2">
                             <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">JavaScript DOM</span>
-                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">Dynamic Logic</span>
-                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">Tailwind Grid</span>
+                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">4-3-3 Pitch Layout</span>
+                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">Tailwind CSS</span>
                         </div>
                     </div>
                 </div>
@@ -336,9 +336,36 @@
                         </div>
                     </div>
 
-                    <!-- Pitch Grid -->
-                    <div id="draftPitch" class="grid grid-cols-4 sm:grid-cols-4 gap-3 bg-emerald-950/40 p-4 rounded-xl border border-emerald-500/20 min-h-[340px] mb-6">
-                        <!-- Rendered dynamically via JavaScript -->
+                    <!-- Tactical 4-3-3 Pitch Container -->
+                    <div class="bg-emerald-950/40 p-6 rounded-xl border border-emerald-500/20 min-h-[500px] mb-6 flex flex-col justify-between space-y-6 relative overflow-hidden">
+                        
+                        <!-- Row 1: Attackers (LW, ST, RW) -->
+                        <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto w-full">
+                            <div id="slot-0"></div>
+                            <div id="slot-1"></div>
+                            <div id="slot-2"></div>
+                        </div>
+
+                        <!-- Row 2: Midfielders (CAM, CM, CDM) -->
+                        <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto w-full">
+                            <div id="slot-3"></div>
+                            <div id="slot-4"></div>
+                            <div id="slot-5"></div>
+                        </div>
+
+                        <!-- Row 3: Defenders (LB, CB, CB, RB) -->
+                        <div class="grid grid-cols-4 gap-3 max-w-3xl mx-auto w-full">
+                            <div id="slot-6"></div>
+                            <div id="slot-7"></div>
+                            <div id="slot-8"></div>
+                            <div id="slot-9"></div>
+                        </div>
+
+                        <!-- Row 4: Goalkeeper (GK) -->
+                        <div class="flex justify-center w-full">
+                            <div id="slot-10" class="w-1/4 min-w-[120px]"></div>
+                        </div>
+
                     </div>
 
                     <!-- Selection Modal -->
@@ -347,7 +374,7 @@
                             <span id="modalPosTitle" class="text-xs font-bold uppercase tracking-wider text-amber-400">Pick Player</span>
                             <span class="text-[10px] text-slate-400">Select 1 Card</span>
                         </div>
-                        <div id="cardsChoiceGrid" class="grid grid-cols-3 gap-3"></div>
+                        <div id="cardsChoiceGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
                     </div>
 
                 </div>
@@ -355,7 +382,7 @@
         </div>
     </section>
 
-    <!-- 5. EDUCATION & CERTIFICATIONS -->
+    <!-- EDUCATION & CERTIFICATIONS -->
     <section id="education" class="py-20 px-6">
         <div class="max-w-5xl mx-auto">
             <div class="flex items-center gap-3 mb-12">
@@ -397,7 +424,7 @@
         </div>
     </section>
 
-    <!-- 6. CONTACT SECTION -->
+    <!-- CONTACT SECTION -->
     <section id="contact" class="py-20 px-6 border-t border-white/5 bg-navy-950/60 relative">
         <div class="max-w-4xl mx-auto text-center">
             <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-crimson/10 border border-crimson/30 text-crimson-light text-xs font-semibold uppercase tracking-wider mb-6">
@@ -460,6 +487,7 @@
                 { name: "L. Diaz", rating: 84, club: "Liverpool", nation: "Colombia" }
             ],
             ST: [
+                { name: "H. Kane", rating: 90, club: "Bayern Munich", nation: "England" },
                 { name: "E. Haaland", rating: 91, club: "Man City", nation: "Norway" },
                 { name: "K. Mbappé", rating: 91, club: "Real Madrid", nation: "France" },
                 { name: "L. Martinez", rating: 88, club: "Inter", nation: "Argentina" }
@@ -511,24 +539,24 @@
         let activeSlotIndex = null;
 
         function renderPitch() {
-            const pitch = document.getElementById('draftPitch');
-            if (!pitch) return;
-            pitch.innerHTML = '';
-
             pitchSlots.forEach((pos, idx) => {
+                const targetContainer = document.getElementById(`slot-${idx}`);
+                if (!targetContainer) return;
+                
+                targetContainer.innerHTML = '';
                 const player = squad[idx];
                 const cardBtn = document.createElement('div');
                 
                 const isLegend = player && player.rating >= 88;
                 const borderStyle = isLegend 
-                    ? "border-amber-400 bg-amber-950/30 shadow-amber-500/20 shadow-lg ring-1 ring-amber-400/50" 
-                    : "border-slate-800 bg-slate-900/90";
+                    ? "border-amber-400 bg-amber-950/40 shadow-amber-500/20 shadow-lg ring-1 ring-amber-400/50" 
+                    : "border-slate-800 bg-slate-900/90 hover:border-amber-500/50";
 
-                cardBtn.className = `p-3 border rounded-xl flex flex-col items-center justify-between cursor-pointer transition-all hover:scale-105 h-28 ${borderStyle}`;
+                cardBtn.className = `p-3 border rounded-xl flex flex-col items-center justify-between cursor-pointer transition-all hover:scale-105 h-28 w-full ${borderStyle}`;
                 
                 if (player) {
                     cardBtn.innerHTML = `
-                        <span class="text-[9px] font-bold text-slate-400 uppercase">${pos}</span>
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">${pos}</span>
                         <span class="text-xl font-black ${isLegend ? 'text-amber-400' : 'text-slate-200'}">${player.rating}</span>
                         <span class="text-xs font-semibold text-white truncate w-full text-center">${player.name}</span>
                         <span class="text-[9px] text-slate-400 truncate w-full text-center">${player.club}</span>
@@ -542,7 +570,7 @@
                     cardBtn.onclick = () => openPicker(pos, idx);
                 }
 
-                pitch.appendChild(cardBtn);
+                targetContainer.appendChild(cardBtn);
             });
 
             updateStats();
