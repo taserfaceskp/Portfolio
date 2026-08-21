@@ -268,7 +268,7 @@
                 <h2 class="text-3xl sm:text-4xl font-bold text-white">Projects</h2>
             </div>
 
-            <div class="grid lg:grid-cols-2 gap-8">
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
                 <!-- Project 1 -->
                 <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group hover:border-crimson/50 transition-all duration-300">
                     <div class="p-8">
@@ -293,63 +293,65 @@
                     </div>
                 </div>
 
-                <!-- Project 2: WORKING INTERACTIVE MATCH SIMULATOR -->
-                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between border border-blue-500/30">
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full">Interactive AI App</span>
-                            <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">Live Working Demo</span>
+                <!-- Project 2 Card Header -->
+                <div class="glass-card rounded-2xl overflow-hidden p-8 flex flex-col justify-between border border-amber-500/30">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">Interactive App</span>
+                            <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">Live Demo Below</span>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">
-                            Interactive Match Odds Engine
+                        <h3 class="text-2xl font-bold text-white mb-3">
+                            Ultimate Squad Draft Simulator
                         </h3>
-                        <p class="text-gray-300 text-xs leading-relaxed mb-4">
-                            Simulate match outcomes live! Adjust team attacking & defensive ratings below to calculate realistic win/draw probabilities in real-time.
+                        <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                            An interactive 11-player squad builder game that dynamically computes real-time rating averages and calculates chemistry synergy based on club and national links.
                         </p>
-
-                        <!-- MINI INTERACTIVE APP -->
-                        <div class="bg-navy-950/80 p-4 rounded-xl border border-white/10 space-y-4 text-xs">
-                            <!-- Team Inputs -->
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-gray-400 mb-1 font-semibold">Home Attack (1-100)</label>
-                                    <input type="range" id="homeAtt" min="40" max="99" value="85" class="w-full accent-crimson cursor-pointer" oninput="runMatchSimulation()">
-                                    <div class="text-right text-crimson-light font-bold" id="homeAttVal">85</div>
-                                </div>
-                                <div>
-                                    <label class="block text-gray-400 mb-1 font-semibold">Away Defense (1-100)</label>
-                                    <input type="range" id="awayDef" min="40" max="99" value="70" class="w-full accent-blue-400 cursor-pointer" oninput="runMatchSimulation()">
-                                    <div class="text-right text-blue-400 font-bold" id="awayDefVal">70</div>
-                                </div>
-                            </div>
-
-                            <!-- Run Button -->
-                            <button onclick="runMatchSimulation()" class="w-full py-2 bg-gradient-to-r from-crimson to-blue-600 hover:opacity-90 text-white font-semibold rounded-lg transition-all text-xs flex items-center justify-center gap-1">
-                                <i data-lucide="play" class="w-3.5 h-3.5"></i> Recalculate Simulation
-                            </button>
-
-                            <!-- Results Progress Bar -->
-                            <div class="space-y-1.5 pt-2 border-t border-white/10">
-                                <div class="flex justify-between text-gray-300 font-semibold text-[11px]">
-                                    <span>Home Win: <strong id="homeProbText" class="text-crimson-light">0%</strong></span>
-                                    <span>Draw: <strong id="drawProbText" class="text-gray-400">0%</strong></span>
-                                    <span>Away Win: <strong id="awayProbText" class="text-blue-400">0%</strong></span>
-                                </div>
-                                <div class="w-full h-3 bg-navy-900 rounded-full overflow-hidden flex">
-                                    <div id="homeBar" class="bg-crimson h-full transition-all duration-500" style="width: 50%"></div>
-                                    <div id="drawBar" class="bg-gray-500 h-full transition-all duration-500" style="width: 25%"></div>
-                                    <div id="awayBar" class="bg-blue-500 h-full transition-all duration-500" style="width: 25%"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap gap-2 mt-4">
-                            <span class="text-xs bg-navy-800 text-gray-300 px-2.5 py-1 rounded-md border border-white/5">JavaScript Algorithmic Model</span>
-                            <span class="text-xs bg-navy-800 text-gray-300 px-2.5 py-1 rounded-md border border-white/5">Real-time UI</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">JavaScript DOM</span>
+                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">Dynamic Logic</span>
+                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">Tailwind Grid</span>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- EMBEDDED DRAFT GAME -->
+            <section id="draft-game" class="py-4">
+                <div class="max-w-4xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 text-white shadow-2xl">
+                    
+                    <!-- Header & Stats Dashboard -->
+                    <div class="flex justify-between items-center bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6">
+                        <div>
+                            <div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Squad Rating</div>
+                            <div id="overallScore" class="text-3xl font-extrabold text-amber-400">0</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Chemistry</div>
+                            <div id="chemScore" class="text-3xl font-extrabold text-emerald-400">0%</div>
+                        </div>
+                        <div>
+                            <button onclick="resetDraft()" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 text-xs px-3 py-2 rounded-lg font-bold transition-all">
+                                🔄 Reset Squad
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pitch Grid -->
+                    <div id="draftPitch" class="grid grid-cols-4 sm:grid-cols-4 gap-3 bg-emerald-950/40 p-4 rounded-xl border border-emerald-500/20 min-h-[340px] mb-6">
+                        <!-- Rendered dynamically via JavaScript -->
+                    </div>
+
+                    <!-- Selection Modal -->
+                    <div id="selectionModal" class="hidden bg-slate-950 p-4 rounded-xl border border-amber-500/40">
+                        <div class="flex justify-between items-center mb-3">
+                            <span id="modalPosTitle" class="text-xs font-bold uppercase tracking-wider text-amber-400">Pick Player</span>
+                            <span class="text-[10px] text-slate-400">Select 1 Card</span>
+                        </div>
+                        <div id="cardsChoiceGrid" class="grid grid-cols-3 gap-3"></div>
+                    </div>
+
+                </div>
+            </section>
         </div>
     </section>
 
@@ -432,6 +434,7 @@
         <p>© <span id="year"></span> Santusht Kumar Pathak. Built with focus and curiosity.</p>
     </footer>
 
+    <!-- SCRIPT SECTION -->
     <script>
         lucide.createIcons();
         document.getElementById('year').textContent = new Date().getFullYear();
@@ -449,37 +452,165 @@
             });
         });
 
-        // WORKING MATCH SIMULATOR ALGORITHM
-        function runMatchSimulation() {
-            const hAtt = parseInt(document.getElementById('homeAtt').value);
-            const aDef = parseInt(document.getElementById('awayDef').value);
+        // SQUAD DRAFT GAME ENGINE
+        const playerPool = {
+            LW: [
+                { name: "K. Kvaratskhelia", rating: 87, club: "Napoli", nation: "Georgia" },
+                { name: "Vinicius Jr.", rating: 89, club: "Real Madrid", nation: "Brazil" },
+                { name: "L. Diaz", rating: 84, club: "Liverpool", nation: "Colombia" }
+            ],
+            ST: [
+                { name: "E. Haaland", rating: 91, club: "Man City", nation: "Norway" },
+                { name: "K. Mbappé", rating: 91, club: "Real Madrid", nation: "France" },
+                { name: "L. Martinez", rating: 88, club: "Inter", nation: "Argentina" }
+            ],
+            RW: [
+                { name: "M. Salah", rating: 89, club: "Liverpool", nation: "Egypt" },
+                { name: "L. Yamal", rating: 83, club: "Barcelona", nation: "Spain" },
+                { name: "Raphinha", rating: 84, club: "Barcelona", nation: "Brazil" }
+            ],
+            CAM: [
+                { name: "J. Bellingham", rating: 90, club: "Real Madrid", nation: "England" },
+                { name: "K. De Bruyne", rating: 91, club: "Man City", nation: "Belgium" },
+                { name: "F. Wirtz", rating: 88, club: "Leverkusen", nation: "Germany" }
+            ],
+            CM: [
+                { name: "F. Valverde", rating: 88, club: "Real Madrid", nation: "Uruguay" },
+                { name: "Pedri", rating: 86, club: "Barcelona", nation: "Spain" },
+                { name: "N. Barella", rating: 87, club: "Inter", nation: "Italy" }
+            ],
+            CDM: [
+                { name: "Rodri", rating: 91, club: "Man City", nation: "Spain" },
+                { name: "D. Rice", rating: 87, club: "Arsenal", nation: "England" },
+                { name: "A. Tchouameni", rating: 85, club: "Real Madrid", nation: "France" }
+            ],
+            LB: [
+                { name: "T. Hernandez", rating: 87, club: "AC Milan", nation: "France" },
+                { name: "A. Robertson", rating: 85, club: "Liverpool", nation: "Scotland" },
+                { name: "F. Mendy", rating: 83, club: "Real Madrid", nation: "France" }
+            ],
+            CB: [
+                { name: "V. van Dijk", rating: 89, club: "Liverpool", nation: "Netherlands" },
+                { name: "W. Saliba", rating: 87, club: "Arsenal", nation: "France" },
+                { name: "R. Dias", rating: 88, club: "Man City", nation: "Portugal" }
+            ],
+            RB: [
+                { name: "D. Carvajal", rating: 86, club: "Real Madrid", nation: "Spain" },
+                { name: "J. Frimpong", rating: 84, club: "Leverkusen", nation: "Netherlands" },
+                { name: "T. Alexander-Arnold", rating: 86, club: "Liverpool", nation: "England" }
+            ],
+            GK: [
+                { name: "T. Courtois", rating: 90, club: "Real Madrid", nation: "Belgium" },
+                { name: "A. Becker", rating: 89, club: "Liverpool", nation: "Brazil" },
+                { name: "E. Martinez", rating: 87, club: "Aston Villa", nation: "Argentina" }
+            ]
+        };
 
-            document.getElementById('homeAttVal').innerText = hAtt;
-            document.getElementById('awayDefVal').innerText = aDef;
+        const pitchSlots = ["LW", "ST", "RW", "CAM", "CM", "CDM", "LB", "CB", "CB", "RB", "GK"];
+        let squad = new Array(11).fill(null);
+        let activeSlotIndex = null;
 
-            // Rating ratio + slight home-advantage baseline
-            const baseRatio = (hAtt / aDef) * 1.15;
-            
-            let homeWin = Math.min(85, Math.max(10, Math.round(baseRatio * 38)));
-            let draw = Math.min(35, Math.max(15, Math.round(28 - Math.abs(hAtt - aDef) * 0.3)));
-            let awayWin = 100 - (homeWin + draw);
+        function renderPitch() {
+            const pitch = document.getElementById('draftPitch');
+            if (!pitch) return;
+            pitch.innerHTML = '';
 
-            if (awayWin < 5) {
-                awayWin = 5;
-                homeWin = 100 - draw - awayWin;
-            }
+            pitchSlots.forEach((pos, idx) => {
+                const player = squad[idx];
+                const cardBtn = document.createElement('div');
+                
+                const isLegend = player && player.rating >= 88;
+                const borderStyle = isLegend 
+                    ? "border-amber-400 bg-amber-950/30 shadow-amber-500/20 shadow-lg ring-1 ring-amber-400/50" 
+                    : "border-slate-800 bg-slate-900/90";
 
-            document.getElementById('homeBar').style.width = homeWin + '%';
-            document.getElementById('drawBar').style.width = draw + '%';
-            document.getElementById('awayBar').style.width = awayWin + '%';
+                cardBtn.className = `p-3 border rounded-xl flex flex-col items-center justify-between cursor-pointer transition-all hover:scale-105 h-28 ${borderStyle}`;
+                
+                if (player) {
+                    cardBtn.innerHTML = `
+                        <span class="text-[9px] font-bold text-slate-400 uppercase">${pos}</span>
+                        <span class="text-xl font-black ${isLegend ? 'text-amber-400' : 'text-slate-200'}">${player.rating}</span>
+                        <span class="text-xs font-semibold text-white truncate w-full text-center">${player.name}</span>
+                        <span class="text-[9px] text-slate-400 truncate w-full text-center">${player.club}</span>
+                    `;
+                } else {
+                    cardBtn.innerHTML = `
+                        <span class="text-[10px] font-bold text-amber-400 uppercase">${pos}</span>
+                        <span class="text-2xl font-bold text-slate-600 mt-1">+</span>
+                        <span class="text-[10px] text-slate-500">Pick</span>
+                    `;
+                    cardBtn.onclick = () => openPicker(pos, idx);
+                }
 
-            document.getElementById('homeProbText').innerText = homeWin + '%';
-            document.getElementById('drawProbText').innerText = draw + '%';
-            document.getElementById('awayProbText').innerText = awayWin + '%';
+                pitch.appendChild(cardBtn);
+            });
+
+            updateStats();
         }
 
-        // Initialize simulation on launch
-        window.onload = runMatchSimulation;
+        function openPicker(pos, slotIdx) {
+            activeSlotIndex = slotIdx;
+            const modal = document.getElementById('selectionModal');
+            const grid = document.getElementById('cardsChoiceGrid');
+            document.getElementById('modalPosTitle').innerText = `Pick a ${pos}`;
+            
+            grid.innerHTML = '';
+            const choices = playerPool[pos] || playerPool['CM'];
+
+            choices.forEach(player => {
+                const isLegend = player.rating >= 88;
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-xl border ${isLegend ? 'border-amber-400 bg-amber-500/10 shadow-amber-500/10 shadow-md' : 'border-slate-800 bg-slate-900'} cursor-pointer hover:border-emerald-400 hover:scale-105 transition-all text-center`;
+                card.innerHTML = `
+                    <div class="text-2xl font-black ${isLegend ? 'text-amber-400' : 'text-slate-200'}">${player.rating}</div>
+                    <div class="text-xs font-bold text-white truncate">${player.name}</div>
+                    <div class="text-[10px] text-slate-400">${player.club} • ${player.nation}</div>
+                `;
+                card.onclick = () => selectCard(player);
+                grid.appendChild(card);
+            });
+
+            modal.classList.remove('hidden');
+        }
+
+        function selectCard(player) {
+            if (activeSlotIndex !== null) {
+                squad[activeSlotIndex] = player;
+            }
+            document.getElementById('selectionModal').classList.add('hidden');
+            renderPitch();
+        }
+
+        function updateStats() {
+            const picked = squad.filter(p => p !== null);
+            if (picked.length === 0) {
+                document.getElementById('overallScore').innerText = '0';
+                document.getElementById('chemScore').innerText = '0%';
+                return;
+            }
+
+            const avgRating = Math.round(picked.reduce((acc, p) => acc + p.rating, 0) / picked.length);
+            document.getElementById('overallScore').innerText = avgRating;
+
+            let chemBonus = 0;
+            for (let i = 0; i < picked.length; i++) {
+                for (let j = i + 1; j < picked.length; j++) {
+                    if (picked[i].club === picked[j].club) chemBonus += 10;
+                    if (picked[i].nation === picked[j].nation) chemBonus += 6;
+                }
+            }
+
+            const totalChem = Math.min(100, Math.round((picked.length / 11) * 35 + chemBonus));
+            document.getElementById('chemScore').innerText = `${totalChem}%`;
+        }
+
+        function resetDraft() {
+            squad = new Array(11).fill(null);
+            document.getElementById('selectionModal').classList.add('hidden');
+            renderPitch();
+        }
+
+        window.addEventListener('DOMContentLoaded', renderPitch);
     </script>
 </body>
 </html>
