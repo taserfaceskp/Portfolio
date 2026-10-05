@@ -268,18 +268,14 @@
                 <h2 class="text-3xl sm:text-4xl font-bold text-white">Projects</h2>
             </div>
 
-            <div class="grid lg:grid-cols-2 gap-8 mb-8">
-                <!-- Project 1 -->
-                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group hover:border-crimson/50 transition-all duration-300">
-                    <div class="p-8">
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Project 1: Personal Portfolio Website -->
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between p-8">
+                    <div>
                         <div class="flex justify-between items-start mb-4">
                             <span class="text-xs font-semibold uppercase tracking-wider text-crimson-light bg-crimson/10 border border-crimson/20 px-3 py-1 rounded-full">Web Development</span>
-                            <a href="https://github.com/taserfaceskp" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-xs text-gray-400 hover:text-white transition-colors border border-white/10 px-2 py-1 rounded">
-                                <i data-lucide="github" class="w-4 h-4"></i>
-                                <span>Code</span>
-                            </a>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-crimson-light transition-colors">
+                        <h3 class="text-2xl font-bold text-white mb-3">
                             Personal Portfolio Website
                         </h3>
                         <p class="text-gray-300 text-sm leading-relaxed mb-6">
@@ -293,92 +289,30 @@
                     </div>
                 </div>
 
-                <!-- Project 2 Card Header -->
-                <div class="glass-card rounded-2xl overflow-hidden p-8 flex flex-col justify-between border border-amber-500/30">
+                <!-- Project 2: Portfolio Generator (Entire Rectangle Clickable) -->
+                <a href="https://github.com/taserfaceskp/Portfolio-Generator" target="_blank" rel="noopener noreferrer" class="block glass-card rounded-2xl overflow-hidden p-8 flex flex-col justify-between group hover:border-crimson/50 transition-all duration-300">
                     <div>
                         <div class="flex justify-between items-start mb-4">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">Interactive App</span>
-                            <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">Live Demo Below</span>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-crimson-light bg-crimson/10 border border-crimson/20 px-3 py-1 rounded-full">Web App</span>
+                            <div class="flex items-center gap-1 text-xs text-gray-400 group-hover:text-white transition-colors border border-white/10 px-2 py-1 rounded">
+                                <i data-lucide="github" class="w-4 h-4"></i>
+                                <span>Code</span>
+                            </div>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-3">
-                            Ultimate Squad Draft Simulator
+                        <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-crimson-light transition-colors">
+                            Portfolio Generator
                         </h3>
                         <p class="text-gray-300 text-sm leading-relaxed mb-6">
-                            An interactive 11-player squad builder game configured in a tactical 4-3-3 formation that dynamically computes real-time rating averages and chemistry synergy.
+                            An automated tool designed to generate clean, responsive portfolio websites for developers and students, simplifying profile setup and deployment.
                         </p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">JavaScript DOM</span>
-                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">4-3-3 Pitch Layout</span>
-                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">Tailwind CSS</span>
+                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">GitHub Repo</span>
+                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">Automation</span>
+                            <span class="text-xs bg-navy-800 text-gray-300 px-3 py-1 rounded-md border border-white/5">Web Tools</span>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
-
-            <!-- EMBEDDED DRAFT GAME -->
-            <section id="draft-game" class="py-4">
-                <div class="max-w-4xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 text-white shadow-2xl">
-                    
-                    <!-- Header & Stats Dashboard -->
-                    <div class="flex justify-between items-center bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6">
-                        <div>
-                            <div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Squad Rating</div>
-                            <div id="overallScore" class="text-3xl font-extrabold text-amber-400">0</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-xs text-slate-400 uppercase font-bold tracking-wider">Chemistry</div>
-                            <div id="chemScore" class="text-3xl font-extrabold text-emerald-400">0%</div>
-                        </div>
-                        <div>
-                            <button onclick="resetDraft()" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 text-xs px-3 py-2 rounded-lg font-bold transition-all">
-                                🔄 Reset Squad
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Tactical 4-3-3 Pitch Container -->
-                    <div class="bg-emerald-950/40 p-6 rounded-xl border border-emerald-500/20 min-h-[500px] mb-6 flex flex-col justify-between space-y-6 relative overflow-hidden">
-                        
-                        <!-- Row 1: Attackers (LW, ST, RW) -->
-                        <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto w-full">
-                            <div id="slot-0"></div>
-                            <div id="slot-1"></div>
-                            <div id="slot-2"></div>
-                        </div>
-
-                        <!-- Row 2: Midfielders (CAM, CM, CDM) -->
-                        <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto w-full">
-                            <div id="slot-3"></div>
-                            <div id="slot-4"></div>
-                            <div id="slot-5"></div>
-                        </div>
-
-                        <!-- Row 3: Defenders (LB, CB, CB, RB) -->
-                        <div class="grid grid-cols-4 gap-3 max-w-3xl mx-auto w-full">
-                            <div id="slot-6"></div>
-                            <div id="slot-7"></div>
-                            <div id="slot-8"></div>
-                            <div id="slot-9"></div>
-                        </div>
-
-                        <!-- Row 4: Goalkeeper (GK) -->
-                        <div class="flex justify-center w-full">
-                            <div id="slot-10" class="w-1/4 min-w-[120px]"></div>
-                        </div>
-
-                    </div>
-
-                    <!-- Selection Modal -->
-                    <div id="selectionModal" class="hidden bg-slate-950 p-4 rounded-xl border border-amber-500/40">
-                        <div class="flex justify-between items-center mb-3">
-                            <span id="modalPosTitle" class="text-xs font-bold uppercase tracking-wider text-amber-400">Pick Player</span>
-                            <span class="text-[10px] text-slate-400">Select 1 Card</span>
-                        </div>
-                        <div id="cardsChoiceGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
-                    </div>
-
-                </div>
-            </section>
         </div>
     </section>
 
@@ -391,6 +325,7 @@
             </div>
 
             <div class="grid md:grid-cols-2 gap-8">
+                <!-- Education -->
                 <div class="glass-card p-8 rounded-2xl relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-navy-700/20 rounded-bl-full pointer-events-none"></div>
                     <div class="w-12 h-12 bg-crimson/10 rounded-xl flex items-center justify-center text-crimson-light mb-6">
@@ -408,6 +343,7 @@
                     </div>
                 </div>
 
+                <!-- Certification (Direct Link to PDF file) -->
                 <div class="glass-card p-8 rounded-2xl relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-bl-full pointer-events-none"></div>
                     <div class="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 mb-6">
@@ -415,15 +351,23 @@
                     </div>
                     <span class="text-xs font-semibold text-gray-400 tracking-wider uppercase">Certification</span>
                     <h3 class="text-2xl font-bold text-white mt-1 mb-2">Microsoft Azure Fundamentals</h3>
-                    <p class="text-blue-400 font-medium mb-4">AZ-900 Certified</p>
-                    <p class="text-gray-400 text-sm leading-relaxed pt-4 border-t border-white/10">
+                    <p class="text-blue-400 font-medium mb-2">AZ-900 Certified</p>
+                    <p class="text-xs text-gray-400 mb-4">Issued: May 18, 2026 • Verification ID: PHhm-uSez</p>
+                    <p class="text-gray-400 text-sm leading-relaxed pt-4 border-t border-white/10 mb-6">
                         Demonstrates foundational knowledge of cloud services, security, privacy, workloads, and how those services are provided with Microsoft Azure.
                     </p>
+
+                    <!-- Direct link to the PDF file in your local directory -->
+                    <a href="./AZ-900%20Certificate.pdf" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors border border-blue-400/30 px-3 py-2 rounded-lg bg-blue-500/10">
+    <i data-lucide="file-text" class="w-4 h-4"></i>
+    <span>View Official Certificate (PDF)</span>
+</a>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- CONTACT SECTION -->
     <!-- CONTACT SECTION -->
     <section id="contact" class="py-20 px-6 border-t border-white/5 bg-navy-950/60 relative">
         <div class="max-w-4xl mx-auto text-center">
@@ -478,167 +422,6 @@
                 mobileMenu.classList.add('hidden');
             });
         });
-
-        // SQUAD DRAFT GAME ENGINE
-        const playerPool = {
-            LW: [
-                { name: "K. Kvaratskhelia", rating: 87, club: "Napoli", nation: "Georgia" },
-                { name: "Vinicius Jr.", rating: 89, club: "Real Madrid", nation: "Brazil" },
-                { name: "L. Diaz", rating: 84, club: "Liverpool", nation: "Colombia" }
-            ],
-            ST: [
-                { name: "H. Kane", rating: 90, club: "Bayern Munich", nation: "England" },
-                { name: "E. Haaland", rating: 91, club: "Man City", nation: "Norway" },
-                { name: "K. Mbappé", rating: 91, club: "Real Madrid", nation: "France" },
-                { name: "L. Martinez", rating: 88, club: "Inter", nation: "Argentina" }
-            ],
-            RW: [
-                { name: "M. Salah", rating: 89, club: "Liverpool", nation: "Egypt" },
-                { name: "L. Yamal", rating: 83, club: "Barcelona", nation: "Spain" },
-                { name: "Raphinha", rating: 84, club: "Barcelona", nation: "Brazil" }
-            ],
-            CAM: [
-                { name: "J. Bellingham", rating: 90, club: "Real Madrid", nation: "England" },
-                { name: "K. De Bruyne", rating: 91, club: "Man City", nation: "Belgium" },
-                { name: "F. Wirtz", rating: 88, club: "Leverkusen", nation: "Germany" }
-            ],
-            CM: [
-                { name: "F. Valverde", rating: 88, club: "Real Madrid", nation: "Uruguay" },
-                { name: "Pedri", rating: 86, club: "Barcelona", nation: "Spain" },
-                { name: "N. Barella", rating: 87, club: "Inter", nation: "Italy" }
-            ],
-            CDM: [
-                { name: "Rodri", rating: 91, club: "Man City", nation: "Spain" },
-                { name: "D. Rice", rating: 87, club: "Arsenal", nation: "England" },
-                { name: "A. Tchouameni", rating: 85, club: "Real Madrid", nation: "France" }
-            ],
-            LB: [
-                { name: "T. Hernandez", rating: 87, club: "AC Milan", nation: "France" },
-                { name: "A. Robertson", rating: 85, club: "Liverpool", nation: "Scotland" },
-                { name: "F. Mendy", rating: 83, club: "Real Madrid", nation: "France" }
-            ],
-            CB: [
-                { name: "V. van Dijk", rating: 89, club: "Liverpool", nation: "Netherlands" },
-                { name: "W. Saliba", rating: 87, club: "Arsenal", nation: "France" },
-                { name: "R. Dias", rating: 88, club: "Man City", nation: "Portugal" }
-            ],
-            RB: [
-                { name: "D. Carvajal", rating: 86, club: "Real Madrid", nation: "Spain" },
-                { name: "J. Frimpong", rating: 84, club: "Leverkusen", nation: "Netherlands" },
-                { name: "T. Alexander-Arnold", rating: 86, club: "Liverpool", nation: "England" }
-            ],
-            GK: [
-                { name: "T. Courtois", rating: 90, club: "Real Madrid", nation: "Belgium" },
-                { name: "A. Becker", rating: 89, club: "Liverpool", nation: "Brazil" },
-                { name: "E. Martinez", rating: 87, club: "Aston Villa", nation: "Argentina" }
-            ]
-        };
-
-        const pitchSlots = ["LW", "ST", "RW", "CAM", "CM", "CDM", "LB", "CB", "CB", "RB", "GK"];
-        let squad = new Array(11).fill(null);
-        let activeSlotIndex = null;
-
-        function renderPitch() {
-            pitchSlots.forEach((pos, idx) => {
-                const targetContainer = document.getElementById(`slot-${idx}`);
-                if (!targetContainer) return;
-                
-                targetContainer.innerHTML = '';
-                const player = squad[idx];
-                const cardBtn = document.createElement('div');
-                
-                const isLegend = player && player.rating >= 88;
-                const borderStyle = isLegend 
-                    ? "border-amber-400 bg-amber-950/40 shadow-amber-500/20 shadow-lg ring-1 ring-amber-400/50" 
-                    : "border-slate-800 bg-slate-900/90 hover:border-amber-500/50";
-
-                cardBtn.className = `p-3 border rounded-xl flex flex-col items-center justify-between cursor-pointer transition-all hover:scale-105 h-28 w-full ${borderStyle}`;
-                
-                if (player) {
-                    cardBtn.innerHTML = `
-                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">${pos}</span>
-                        <span class="text-xl font-black ${isLegend ? 'text-amber-400' : 'text-slate-200'}">${player.rating}</span>
-                        <span class="text-xs font-semibold text-white truncate w-full text-center">${player.name}</span>
-                        <span class="text-[9px] text-slate-400 truncate w-full text-center">${player.club}</span>
-                    `;
-                } else {
-                    cardBtn.innerHTML = `
-                        <span class="text-[10px] font-bold text-amber-400 uppercase">${pos}</span>
-                        <span class="text-2xl font-bold text-slate-600 mt-1">+</span>
-                        <span class="text-[10px] text-slate-500">Pick</span>
-                    `;
-                    cardBtn.onclick = () => openPicker(pos, idx);
-                }
-
-                targetContainer.appendChild(cardBtn);
-            });
-
-            updateStats();
-        }
-
-        function openPicker(pos, slotIdx) {
-            activeSlotIndex = slotIdx;
-            const modal = document.getElementById('selectionModal');
-            const grid = document.getElementById('cardsChoiceGrid');
-            document.getElementById('modalPosTitle').innerText = `Pick a ${pos}`;
-            
-            grid.innerHTML = '';
-            const choices = playerPool[pos] || playerPool['CM'];
-
-            choices.forEach(player => {
-                const isLegend = player.rating >= 88;
-                const card = document.createElement('div');
-                card.className = `p-3 rounded-xl border ${isLegend ? 'border-amber-400 bg-amber-500/10 shadow-amber-500/10 shadow-md' : 'border-slate-800 bg-slate-900'} cursor-pointer hover:border-emerald-400 hover:scale-105 transition-all text-center`;
-                card.innerHTML = `
-                    <div class="text-2xl font-black ${isLegend ? 'text-amber-400' : 'text-slate-200'}">${player.rating}</div>
-                    <div class="text-xs font-bold text-white truncate">${player.name}</div>
-                    <div class="text-[10px] text-slate-400">${player.club} • ${player.nation}</div>
-                `;
-                card.onclick = () => selectCard(player);
-                grid.appendChild(card);
-            });
-
-            modal.classList.remove('hidden');
-        }
-
-        function selectCard(player) {
-            if (activeSlotIndex !== null) {
-                squad[activeSlotIndex] = player;
-            }
-            document.getElementById('selectionModal').classList.add('hidden');
-            renderPitch();
-        }
-
-        function updateStats() {
-            const picked = squad.filter(p => p !== null);
-            if (picked.length === 0) {
-                document.getElementById('overallScore').innerText = '0';
-                document.getElementById('chemScore').innerText = '0%';
-                return;
-            }
-
-            const avgRating = Math.round(picked.reduce((acc, p) => acc + p.rating, 0) / picked.length);
-            document.getElementById('overallScore').innerText = avgRating;
-
-            let chemBonus = 0;
-            for (let i = 0; i < picked.length; i++) {
-                for (let j = i + 1; j < picked.length; j++) {
-                    if (picked[i].club === picked[j].club) chemBonus += 10;
-                    if (picked[i].nation === picked[j].nation) chemBonus += 6;
-                }
-            }
-
-            const totalChem = Math.min(100, Math.round((picked.length / 11) * 35 + chemBonus));
-            document.getElementById('chemScore').innerText = `${totalChem}%`;
-        }
-
-        function resetDraft() {
-            squad = new Array(11).fill(null);
-            document.getElementById('selectionModal').classList.add('hidden');
-            renderPitch();
-        }
-
-        window.addEventListener('DOMContentLoaded', renderPitch);
     </script>
 </body>
 </html>
